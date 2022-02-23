@@ -32,7 +32,7 @@ warnings.simplefilter('ignore', RuntimeWarning)
 
 df = None
 back_thread = None
-# ColorBar = plt.colorbar()
+
 x = []
 y = []
 
@@ -105,27 +105,14 @@ def percentage_error(y_percentage, y_interpolated, residuals):  # Done
         else:
             break
 
-    # if len(residuals) == 0:
-    #     residul_error = 0
-    # else:
-    #     residul_error = residuals[0]
-    # std = np.std(y)
-    # deviation = (std**2)*len(y)
-    # rSquare = (deviation - residul_error)/deviation
-    # error = 1 - rSquare
     std = np.std(y)
     deviation = (std**2)*len(y)
     rSquare = (deviation - residuals)/deviation
-#    rSquare = (deviation - residuals[0])/deviation
     error = 1 - rSquare
-    # correlation_matrix = np.corrcoef(y_use, y_error_use)
-    # correlation_xy = correlation_matrix[0, 1]
-    # rSquared = correlation_xy ** 2
     return error
 
 
-def polynomial_interpolation(x, y, order):  # Done
-    # global x, y
+def polynomial_interpolation(x, y, order): 
     global coefficients 
     residual = 0
     coefficients, residuals, _,_,_ = np.polyfit(x, y, order, full = True)
@@ -140,7 +127,7 @@ def polynomial_interpolation(x, y, order):  # Done
     return x_after_interpolation_at_1_chunks, y_after_interpolation_at_1_chunks, y_interpolated, error_percent, coefficients
 
 
-def polynomial_extrapolation(x, y, order, extra_percent):  # Done
+def polynomial_extrapolation(x, y, order, extra_percent):  
     global x_after_interpolation_at_1_chunks, coefficients_extrapolation
     x_firstpart, x_secondpart = np.split(x, [int(extra_percent * len(x))])
     y_firstpart, y_secondpart = np.split(y, [int(extra_percent * len(x))])
@@ -149,7 +136,7 @@ def polynomial_extrapolation(x, y, order, extra_percent):  # Done
     return y_extrapolated
 
 
-def peicewise_polynomial_interpolation(x, y, numofChunks, order, overlapping_percentage):  # Done
+def peicewise_polynomial_interpolation(x, y, numofChunks, order, overlapping_percentage):  
     global x_after_interpolation_at_multiple_chunks, y_after_interpolation_at_multiple_chunks, Y_error, coefficients_each_chunk, x_list_of_chunks, y_list_of_chunks
     Y_error, x_after_interpolation_at_multiple_chunks, y_after_interpolation_at_multiple_chunks, coefficients_each_chunk = [], [], [], []
     error_list = []
@@ -239,7 +226,7 @@ def latex_equation(order, no_of_chunks, extrapolation_flag):
         return equations_list
 
 
-def chunks_divider(array, number_of_chunks, percentage):  # Done
+def chunks_divider(array, number_of_chunks, percentage):  
     if percentage == 0:
         list_of_chunks = np.array_split(array, number_of_chunks)
         return list_of_chunks
@@ -255,7 +242,7 @@ def chunks_divider(array, number_of_chunks, percentage):  # Done
     return result
 
 
-def cancel_process():  # Done
+def cancel_process():  
     global start_error_map_button
     start_error_map_button = ttk.Button(root, width=21, text="Start Error Map", command=generate_error_map) \
         .place(x=780 + 30, y=460 + 60 + 80 + 50)
@@ -264,7 +251,7 @@ def cancel_process():  # Done
     back_thread.kill()
 
 
-def generate_error_matrix(x_data, y_data, who_const, const_value, axis_state):  # Done
+def generate_error_matrix(x_data, y_data, who_const, const_value, axis_state): 
     global progress, progress_var, start_error_map_button, back_thread, x_axis_option, \
         y_axis_option, x, y, constant_variable_value, error_map_graph, error_map_fig, error_graph
     x_label = ""
@@ -278,7 +265,6 @@ def generate_error_matrix(x_data, y_data, who_const, const_value, axis_state):  
     order_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     overlap_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     no_ch_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-    # tick = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     save_var = None
     if who_const == "number of chunks":
         no_ch_list = [const_value]
@@ -304,7 +290,6 @@ def generate_error_matrix(x_data, y_data, who_const, const_value, axis_state):  
                 temp.append(error_percent)
                 save_var = error_percent
                 progress_var.set(progress_var.get() + 100 / (len(no_ch_list) * len(overlap_list) * len(order_list)))
-                # time.sleep(0.02)
                 root.update_idletasks()
             if not state_var:error_matrix.append(temp)
         if state_var:error_matrix.append(temp)
@@ -323,9 +308,6 @@ def generate_error_matrix(x_data, y_data, who_const, const_value, axis_state):  
     error_graph.get_tk_widget().place(x=790, y=10, width=430 + 30 + 35, height=340 + 50)
     a = error_map_graph.imshow(error_matrix,origin='lower')
     error_map_fig.colorbar(a)
-
-    # error_map_graph.set_xticks(tick)
-    # error_map_graph.set_yticks(tick)
     error_map_graph.tick_params(axis='both', labelsize='small')
 
     error_map_graph.set_xlabel(x_label)
@@ -375,7 +357,7 @@ def looping():
     root.after(500, looping)
 
 
-def generate_error_map():  # Done
+def generate_error_map():  
     global x_axis_option, y_axis_option, x, y, constant_variable_value, error_map_graph, error_map_fig, back_thread
     x_axis = x_axis_option.get()
     y_axis = y_axis_option.get()
@@ -408,11 +390,10 @@ def generate_error_map():  # Done
     back_thread.start()
 
 
-# 8CA1A5
+
 
 root = tk.Tk()
 root.title("Curve Fitting Models ")
-# root.geometry("1265x700")
 root.geometry("1297x700")
 
 root.configure(bg="#8CA1A5")
